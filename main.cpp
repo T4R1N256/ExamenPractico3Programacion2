@@ -67,7 +67,7 @@ bool Personaje::operator>(const Personaje &otro) {
 int Personaje::operator()() { return 1; }
 
 ostream &operator<<(ostream &os, const Personaje &p) {
-  os << '"' << p.nombre << '" Nivel: ' << p.nivel << " | XP: " << p.experiencia
+  os << '"' << p.nombre << "\" Nivel: " << p.nivel << " | XP: " << p.experiencia
      << " | Salud: " << p.salud;
 
   return os;
