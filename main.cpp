@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 using namespace std;
 
 // Despues de 10 de XP se sube un nivel
@@ -131,7 +132,7 @@ public:
 };
 
 Mago::Mago(string n, int d, int c)
-    : Personaje(n, 1, 0, 100), danVeneno(d), campFuerza(c) {};
+    : Personaje(n, 15, 70, 1, 0, 100), danVeneno(d), campFuerza(c) {};
 
 void Mago::atacar() {
   cout << "El mago realiza un ataque con su pocion de veneno!" << endl;
@@ -149,10 +150,10 @@ public:
 };
 
 Curandero::Curandero(string n, int c, int r)
-    : Personaje(n, 1, 0, 100), canCuracion(c), rapidez(r) {};
+    : Personaje(n, 15, 70, 1, 0, 100), canCuracion(c), rapidez(r) {};
 
 void Curandero::atacar() {
-  cout << "El curandero realiza un ataque con su mano!" << endl;
+  cout << "El curandero realiza un ataque con su baston!" << endl;
 };
 
 class Arquero : public Personaje {
@@ -167,11 +168,26 @@ public:
 };
 
 Arquero::Arquero(string n, int v, int c)
-    : Personaje(n, 1, 0, 100), velocidad(v), canFlechas(c) {};
+    : Personaje(n, 15, 70, 1, 0, 100), velocidad(v), canFlechas(c) {};
 
 void Arquero::atacar() {
-  cout << "El curandero realiza un ataque con su mano!" << endl;
+  cout << "El arquero realiza un ataque con su arco!" << endl;
 };
+
+int leerInt() {
+  int num;
+
+  while (true) {
+    if (cin >> num) {
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      return num;
+    } else {
+      cout << "Entrada invalida. Intente de nuevo: ";
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+  }
+}
 
 int MenuPrincipal() {
   int opc;
@@ -179,16 +195,9 @@ int MenuPrincipal() {
        << "1. Iniciar juego" << endl
        << "0. Salir" << endl;
 
-  cin >> opc;
+  opc = leerInt();
 
-  switch (opc) {
-  case 0:
-    return 0;
-  case 1:
-    return 1;
-  }
-
-  return 0;
+  return opc;
 }
 
 int EscogerPersonaje() {
@@ -199,14 +208,9 @@ int EscogerPersonaje() {
        << "3. Arquero" << endl
        << "4. Mago" << endl;
 
-  cin >> opc;
+  opc = leerInt();
 
-  switch (opc) {
-  case 1:
-    return 1;
-  case:
-    return 1;
-  }
+  return opc;
 }
 
 int main() {
