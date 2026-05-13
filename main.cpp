@@ -1,17 +1,23 @@
 #include <iostream>
 using namespace std;
 
+// Despues de 10 de XP se sube un nivel
+// 
+
 class Personaje {
 private:
   string nombre;
   int nivel;
   int experiencia;
   int salud;
+  int daño;
+  int poderTotal;
 
 public:
-  Personaje(string nombre, int nivel = 1, int exp = 0, int salud = 100);
+  Personaje(string nombre, int danio, int poderTotal, int nivel = 1,
+            int exp = 0, int salud = 100);
 
-  virtual ~Personaje();
+  // virtual ~Personaje();
 
   virtual void atacar();
 
@@ -27,8 +33,12 @@ public:
   friend istream &operator>>(istream &, Personaje &);
 };
 
-Personaje::Personaje(string nombre, int nivel, int exp, int salud) {
+Personaje::Personaje(string nombre, int danio, int poderTotal, int nivel,
+                     int exp, int salud) {
+
   this->nombre = nombre;
+  this->daño = 0;
+  this->poderTotal = 0;
   this->nivel = (nivel < 1) ? 1 : nivel;
   this->experiencia = (exp < 0) ? 0 : exp;
   this->salud = (salud < 0) ? 0 : salud;
@@ -85,37 +95,124 @@ istream &operator>>(istream &is, Personaje &p) {
   if (p.experiencia < 0)
     p.experiencia = 0;
   cout << "Salud: ";
+  is >> p.salud;
   if (p.salud < 0)
     p.salud = 0;
   return is;
 }
 
 class Guerrero : public Personaje {
+private:
+  int escudo;
+  int fuerza;
+
 public:
-  Guerrero();
+  Guerrero(string);
 
   void atacar() override;
+};
+
+Guerrero::Guerrero(string n)
+    : Personaje(n, 15, 70, 1, 0, 100), escudo(50), fuerza(5) {};
+
+void Guerrero::atacar() {
+  cout << "El guerrero realiza un ataque con su espada!" << endl;
 };
 
 class Mago : public Personaje {
+private:
+  int danVeneno;
+  int campFuerza;
+
 public:
-  Mago();
+  Mago(string, int, int);
 
   void atacar() override;
+};
+
+Mago::Mago(string n, int d, int c)
+    : Personaje(n, 1, 0, 100), danVeneno(d), campFuerza(c) {};
+
+void Mago::atacar() {
+  cout << "El mago realiza un ataque con su pocion de veneno!" << endl;
 };
 
 class Curandero : public Personaje {
+private:
+  int canCuracion;
+  int rapidez;
+
 public:
-  Curandero();
+  Curandero(string, int, int);
 
   void atacar() override;
+};
+
+Curandero::Curandero(string n, int c, int r)
+    : Personaje(n, 1, 0, 100), canCuracion(c), rapidez(r) {};
+
+void Curandero::atacar() {
+  cout << "El curandero realiza un ataque con su mano!" << endl;
 };
 
 class Arquero : public Personaje {
+private:
+  int velocidad;
+  int canFlechas;
+
 public:
-  Arquero();
+  Arquero(string, int, int);
 
   void atacar() override;
 };
 
-int main() { return 0; }
+Arquero::Arquero(string n, int v, int c)
+    : Personaje(n, 1, 0, 100), velocidad(v), canFlechas(c) {};
+
+void Arquero::atacar() {
+  cout << "El curandero realiza un ataque con su mano!" << endl;
+};
+
+int MenuPrincipal() {
+  int opc;
+  cout << "Ingresa una opción: " << endl
+       << "1. Iniciar juego" << endl
+       << "0. Salir" << endl;
+
+  cin >> opc;
+
+  switch (opc) {
+  case 0:
+    return 0;
+  case 1:
+    return 1;
+  }
+
+  return 0;
+}
+
+int EscogerPersonaje() {
+  int opc;
+  cout << "Escoje tu personaje: " << endl
+       << "1. Guerrero" << endl
+       << "2. Curandero" << endl
+       << "3. Arquero" << endl
+       << "4. Mago" << endl;
+
+  cin >> opc;
+
+  switch (opc) {
+  case 1:
+    return 1;
+  case:
+    return 1;
+  }
+}
+
+int main() {
+
+  if (MenuPrincipal() == 1) {
+  }
+
+  return 0;
+}
