@@ -1,9 +1,26 @@
+/*
+Tarin Gutierrez Alejandro 247521
+Hernandez Garrido Jesus Eduardo 249285
+Coronado Rodriguez Miguel Angel 246025
+*/
+
 #include <iostream>
 #include <limits>
 using namespace std;
 
-// Despues de 10 de XP se sube un nivel
-//
+// Despues de 100 de XP se sube un nivel
+
+// enum asigna un token al id de tipo personaje
+enum TipoPersonaje {
+  GUERRERO = 1,
+  CURANDERO = 2,
+  ARQUERO = 3,
+  MAGO = 4
+};
+
+enum Error {
+  ERROR = -1,
+};
 
 class Personaje {
 protected:
@@ -11,7 +28,7 @@ protected:
   int nivel;
   int experiencia;
   int salud;
-  int daño;
+  int danio;
   int poderTotal;
 
 public:
@@ -24,9 +41,8 @@ public:
 
   void subirNivel();
 
-  // Sobrecargar + para representar experiencia?
   void cargarExperiencia(int);
-  Personaje &operator+(int);
+  Personaje &operator+(int); // añade experiencia?
   bool operator>(const Personaje &);
   int operator()(); // Nivel de poder?
 
@@ -38,14 +54,14 @@ Personaje::Personaje(string nombre, int danio, int poderTotal, int nivel,
                      int exp, int salud) {
 
   this->nombre = nombre;
-  this->daño = 0;
+  this->danio = 0;
   this->poderTotal = 0;
   this->nivel = (nivel < 1) ? 1 : nivel;
   this->experiencia = (exp < 0) ? 0 : exp;
   this->salud = (salud < 0) ? 0 : salud;
 }
 
-Personaje::~Personaje() { cout << "Personaje generico destruido..." << endl; }
+Personaje::~Personaje() {}
 
 void Personaje::atacar() {
   cout << nombre << " realiza un ataque generico!" << endl;
@@ -77,6 +93,7 @@ bool Personaje::operator>(const Personaje &otro) {
   return experiencia > otro.experiencia;
 }
 
+// TODO
 int Personaje::operator()() { return 1; }
 
 ostream &operator<<(ostream &os, const Personaje &p) {
@@ -134,15 +151,15 @@ private:
   int campFuerza;
 
 public:
-  Mago(string, int, int);
+  Mago(string);
 
   ~Mago();
 
   void atacar() override;
 };
 
-Mago::Mago(string n, int d, int c)
-    : Personaje(n, 15, 70, 1, 0, 100), danVeneno(d), campFuerza(c) {};
+Mago::Mago(string n)
+    : Personaje(n, 15, 70, 1, 0, 100), danVeneno(50), campFuerza(5) {};
 
 Mago::~Mago() {
   cout << "Mago " << nombre << " destruido correctamente..." << endl;
@@ -158,15 +175,15 @@ private:
   int rapidez;
 
 public:
-  Curandero(string, int, int);
+  Curandero(string);
 
   ~Curandero();
 
   void atacar() override;
 };
 
-Curandero::Curandero(string n, int c, int r)
-    : Personaje(n, 15, 70, 1, 0, 100), canCuracion(c), rapidez(r) {};
+Curandero::Curandero(string n)
+    : Personaje(n, 15, 70, 1, 0, 100), canCuracion(10), rapidez(5) {};
 
 void Curandero::atacar() {
   cout << "El curandero realiza un ataque con su baston!" << endl;
@@ -182,15 +199,15 @@ private:
   int canFlechas;
 
 public:
-  Arquero(string, int, int);
+  Arquero(string);
 
   ~Arquero();
 
   void atacar() override;
 };
 
-Arquero::Arquero(string n, int v, int c)
-    : Personaje(n, 15, 70, 1, 0, 100), velocidad(v), canFlechas(c) {};
+Arquero::Arquero(string n)
+    : Personaje(n, 15, 70, 1, 0, 100), velocidad(10), canFlechas(30) {};
 
 Arquero::~Arquero() {
   cout << "Arquero " << nombre << " destruido correctamente..." << endl;
@@ -200,13 +217,18 @@ void Arquero::atacar() {
   cout << "El arquero realiza un ataque con su arco!" << endl;
 };
 
+// valida entrada de numeros enteros
 int leerInt() {
   int num;
 
   while (true) {
     if (cin >> num) {
-      cin.ignore(numeric_limits<streamsize>::max(), '\n');
-      return num;
+      if (num >= 0) {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return num;
+      } else {
+        cout << "Error. Ingrese un numero mayor a 0: ";
+      }
     } else {
       cout << "Entrada invalida. Intente de nuevo: ";
       cin.clear();
@@ -221,28 +243,121 @@ int MenuPrincipal() {
        << "1. Iniciar juego" << endl
        << "0. Salir" << endl;
 
-  opc = leerInt();
+  do {
+    opc = leerInt();
+  } while (opc != 1 && opc != 0);
 
   return opc;
 }
 
 int EscogerPersonaje() {
-  int opc;
-  cout << "Escoje tu personaje: " << endl
-       << "1. Guerrero" << endl
-       << "2. Curandero" << endl
-       << "3. Arquero" << endl
-       << "4. Mago" << endl;
+  int opc = 0;
 
-  opc = leerInt();
+  while (opc < 1 || opc > 4) {
+    cout << "Escoje tu personaje: " << endl
+         << "1. Guerrero" << endl
+         << "2. Curandero" << endl
+         << "3. Arquero" << endl
+         << "4. Mago" << endl;
+
+    opc = leerInt();
+  }
 
   return opc;
 }
 
-int main() {
+int EscogerCompanero(int p) {
+  int opc;
 
-  if (MenuPrincipal() == 1) {
+  if (p == 1) {
+    cout << endl << "Escoje tu compañero: " << endl
+         << "2. Curandero" << endl
+         << "3. Arquero" << endl
+         << "4. Mago" << endl;
+
+    cin >> opc;
+  } else if (p == 2) {
+    cout << endl << "Escoje tu compañero: " << endl
+         << "1. Guerrero" << endl
+         << "3. Arquero" << endl
+         << "4. Mago" << endl;
+
+    cin >> opc;
+  } else if (p == 3) {
+    cout << endl << "Escoje tu compañero: " << endl
+         << "1. Guerrero" << endl
+         << "2. Curandero" << endl
+         << "4. Mago" << endl;
+
+    cin >> opc;
+  } else {
+    cout << endl << "Escoje tu compañero: " << endl
+         << "1. Guerrero" << endl
+         << "2. Curandero" << endl
+         << "3. Arquero" << endl;
+
+    cin >> opc;
   }
+
+  return opc;
+}
+
+Personaje *crearPersonaje(int tipo) {
+  string nombre; 
+
+  cout << "Nombre del personaje: ";
+
+  getline(cin, nombre);
+  
+  switch (tipo) {
+  case GUERRERO:
+    return new Guerrero(nombre);
+
+  case CURANDERO:
+    return new Curandero(nombre);
+
+  case ARQUERO:
+    return new Arquero(nombre);
+
+  case MAGO:
+    return new Mago(nombre);
+
+  default:
+    return nullptr;
+  }
+}
+
+int main() {
+    int id_jugador = EscogerPersonaje();
+
+    while (id_jugador == ERROR) {
+      cout << "Opcion invalida. Intente de nuevo: " << endl;
+      id_jugador = EscogerPersonaje();
+    }
+
+    Personaje *jugador = crearPersonaje(id_jugador);
+    
+    int id_amigo = EscogerCompanero(id_jugador);
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    while (id_amigo == ERROR) {
+      cout << "Opcion invalida. Intente de nuevo: " << endl;
+      id_amigo = EscogerCompanero(id_jugador);
+    }
+
+    Personaje *amigo = crearPersonaje(id_amigo);
+
+    if (jugador == nullptr || amigo == nullptr) {
+      cout << "Error al crear el personaje" << endl;
+      return 0;
+    }
+
+    cout << dynamic_cast<Personaje&>(*jugador) << endl;
+    cout << dynamic_cast<Personaje&>(*amigo) << endl;
+
+    delete jugador;
+    delete amigo;
 
   return 0;
 }
