@@ -2,10 +2,10 @@
 using namespace std;
 
 // Despues de 10 de XP se sube un nivel
-// 
+//
 
 class Personaje {
-private:
+protected:
   string nombre;
   int nivel;
   int experiencia;
@@ -17,7 +17,7 @@ public:
   Personaje(string nombre, int danio, int poderTotal, int nivel = 1,
             int exp = 0, int salud = 100);
 
-  // virtual ~Personaje();
+  virtual ~Personaje();
 
   virtual void atacar();
 
@@ -43,6 +43,8 @@ Personaje::Personaje(string nombre, int danio, int poderTotal, int nivel,
   this->experiencia = (exp < 0) ? 0 : exp;
   this->salud = (salud < 0) ? 0 : salud;
 }
+
+Personaje::~Personaje() { cout << "Personaje generico destruido..." << endl; }
 
 void Personaje::atacar() {
   cout << nombre << " realiza un ataque generico!" << endl;
@@ -109,11 +111,17 @@ private:
 public:
   Guerrero(string);
 
+  ~Guerrero();
+
   void atacar() override;
 };
 
 Guerrero::Guerrero(string n)
     : Personaje(n, 15, 70, 1, 0, 100), escudo(50), fuerza(5) {};
+
+Guerrero::~Guerrero() {
+  cout << "Guerrero " << nombre << " destruido correctamente..." << endl;
+}
 
 void Guerrero::atacar() {
   cout << "El guerrero realiza un ataque con su espada!" << endl;
@@ -127,11 +135,17 @@ private:
 public:
   Mago(string, int, int);
 
+  ~Mago();
+
   void atacar() override;
 };
 
 Mago::Mago(string n, int d, int c)
     : Personaje(n, 1, 0, 100), danVeneno(d), campFuerza(c) {};
+
+Mago::~Mago() {
+  cout << "Mago " << nombre << " destruido correctamente..." << endl;
+}
 
 void Mago::atacar() {
   cout << "El mago realiza un ataque con su pocion de veneno!" << endl;
@@ -145,6 +159,8 @@ private:
 public:
   Curandero(string, int, int);
 
+  ~Curandero();
+
   void atacar() override;
 };
 
@@ -155,6 +171,10 @@ void Curandero::atacar() {
   cout << "El curandero realiza un ataque con su mano!" << endl;
 };
 
+Curandero::~Curandero() {
+  cout << "Curandero " << nombre << " destruido correctamente" << endl;
+}
+
 class Arquero : public Personaje {
 private:
   int velocidad;
@@ -163,11 +183,17 @@ private:
 public:
   Arquero(string, int, int);
 
+  ~Arquero();
+
   void atacar() override;
 };
 
 Arquero::Arquero(string n, int v, int c)
     : Personaje(n, 1, 0, 100), velocidad(v), canFlechas(c) {};
+
+Arquero::~Arquero() {
+  cout << "Arquero " << nombre << " destruido correctamente..." << endl;
+}
 
 void Arquero::atacar() {
   cout << "El curandero realiza un ataque con su mano!" << endl;
@@ -204,8 +230,15 @@ int EscogerPersonaje() {
   switch (opc) {
   case 1:
     return 1;
-  case:
-    return 1;
+  case 2:
+    return 2;
+  case 3:
+    return 4;
+  case 4:
+    return 4;
+  default:
+    cout << "Opcion no disponible!!!" << endl;
+    return 0;
   }
 }
 
