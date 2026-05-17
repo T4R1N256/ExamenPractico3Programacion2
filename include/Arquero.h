@@ -1,0 +1,19 @@
+#ifndef ARQUERO_H
+#define ARQUERO_H
+
+#include "Personaje.h"
+
+class Arquero : public Personaje {
+private:
+  int velocidad;
+  int canFlechas;
+
+public:
+  Arquero(string);
+
+  ~Arquero();
+
+  void atacar(Personaje &) override;
+};
+
+#endif
