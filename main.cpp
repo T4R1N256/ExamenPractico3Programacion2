@@ -9,12 +9,12 @@ Coronado Rodriguez Miguel Angel 246025
 #include "Guerrero.h"
 #include "Mago.h"
 #include "Personaje.h"
-#include <iostream>
-#include <limits>
-#include <vector>
-#include <unistd.h>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
+#include <limits>
+#include <unistd.h>
+#include <vector>
 using namespace std;
 
 // Despues de 100 de XP se sube un nivel
@@ -149,9 +149,7 @@ Personaje *crearPersonaje(int tipo) {
   }
 }
 
-int generarIdAleatorio(int max) {
-  return rand() % max + 1;
-}
+int generarIdAleatorio(int max) { return rand() % max + 1; }
 
 int main() {
   srand(time(NULL));
@@ -163,125 +161,124 @@ int main() {
   cout << "¡Bienvenido al juego de batalla de personajes!" << endl;
 
   do {
-      if (!rondas)
-        cout << "¿Quieres empezar a jugar?: ";
-      else 
-        cout << "¿Quieres jugar otra ronda?: ";
+    if (!rondas)
+      cout << "¿Quieres empezar a jugar?: ";
+    else
+      cout << "¿Quieres jugar otra ronda?: ";
 
+    cin >> res;
+
+    while (res != "s" && res != "S" && res != "n" && res != "N") {
+      cout << "Opción inválida. Por favor, ingresa 's' para sí o 'n' para no: ";
       cin >> res;
+    }
 
-      while (res != "s" && res != "S" && res != "n" && res != "N") {
-        cout << "Opción inválida. Por favor, ingresa 's' para sí o 'n' para no: ";
-        cin >> res;
-      }
-
-      if (res == "s" || res == "S") {
-        rondas++;
-      } else {
-        jugando = false;
-        cout << "¡Gracias por jugar! Hasta la próxima." << endl;
-      } 
+    if (res == "s" || res == "S") {
+      rondas++;
+    } else {
+      jugando = false;
+      cout << "¡Gracias por jugar! Hasta la próxima." << endl;
+    }
 
     cout << "========== RONDA " << rondas << " ==========" << endl;
     int id_jugador = EscogerPersonaje();
-  
-  // No necesario porque nunca llega al error
-  while (id_jugador == ERROR) {
-    cout << "Opcion invalida. Intente de nuevo: " << endl;
-    id_jugador = EscogerPersonaje();
-  }
 
-  Personaje *jugador = crearPersonaje(id_jugador);
-
-  int id_amigo = EscogerCompanero(id_jugador);
-
-  while (id_amigo == ERROR) {
-    cout << "Opcion invalida. Intente de nuevo: " << endl;
-    id_amigo = EscogerCompanero(id_jugador);
-  }
-
-  Personaje *amigo = crearPersonaje(id_amigo);
-
-  if (jugador == nullptr || amigo == nullptr) {
-    cout << "Error al crear el personaje" << endl;
-    return 0;
-  }
-
-  vector<Personaje *> equipo = {jugador, amigo};
-
-  if (expEquipo) {
-    for (Personaje *p : equipo) {
-      p->cargarExperiencia(expEquipo/2);
+    // No necesario porque nunca llega al error
+    while (id_jugador == ERROR) {
+      cout << "Opcion invalida. Intente de nuevo: " << endl;
+      id_jugador = EscogerPersonaje();
     }
-  }
 
-  Personaje *enemigos1 = nullptr;
-  Personaje *enemigos2 = nullptr;
+    Personaje *jugador = crearPersonaje(id_jugador);
 
-  vector<Personaje *> enemigos = {};
+    int id_amigo = EscogerCompanero(id_jugador);
 
-  for (int i = 1; i <= 4; i++) {
-    if (i != id_jugador && i != id_amigo) {
-      if (enemigos1 == nullptr) {
-        cout << "\nEnemigo 1: " <<  endl;
-        enemigos1 = crearPersonaje(generarIdAleatorio(4));
-          enemigos.push_back(enemigos1);
-      } else if (enemigos2 == nullptr) {
-                cout << "\nEnemigo 2: " <<  endl;
-        enemigos2 = crearPersonaje(generarIdAleatorio(4));
-        enemigos.push_back(enemigos2);
+    while (id_amigo == ERROR) {
+      cout << "Opcion invalida. Intente de nuevo: " << endl;
+      id_amigo = EscogerCompanero(id_jugador);
+    }
+
+    Personaje *amigo = crearPersonaje(id_amigo);
+
+    if (jugador == nullptr || amigo == nullptr) {
+      cout << "Error al crear el personaje" << endl;
+      return 0;
+    }
+
+    vector<Personaje *> equipo = {jugador, amigo};
+
+    if (expEquipo) {
+      for (Personaje *p : equipo) {
+        p->cargarExperiencia(expEquipo / 2);
       }
     }
-  }
+
+    Personaje *enemigos1 = nullptr;
+    Personaje *enemigos2 = nullptr;
+
+    vector<Personaje *> enemigos = {};
+
+    for (int i = 1; i <= 4; i++) {
+      if (i != id_jugador && i != id_amigo) {
+        if (enemigos1 == nullptr) {
+          cout << "\nEnemigo 1: " << endl;
+          enemigos1 = crearPersonaje(generarIdAleatorio(4));
+          enemigos.push_back(enemigos1);
+        } else if (enemigos2 == nullptr) {
+          cout << "\nEnemigo 2: " << endl;
+          enemigos2 = crearPersonaje(generarIdAleatorio(4));
+          enemigos.push_back(enemigos2);
+        }
+      }
+    }
 
     if (expEnemigo) {
-    for (Personaje *p : enemigos) {
-      p->cargarExperiencia(expEnemigo/2);
-    }
-  }
-
-  while (!equipo.empty() && !enemigos.empty()) {
-    for (Personaje *p : equipo) {
-      if (!enemigos.empty()) {
-        p->atacar(*enemigos[0]);
-        sleep(2);
-        if (!enemigos[0]->estaVivo()) {
-          cout << enemigos[0]->getNombre() << " ha sido derrotado!" << endl;
-          enemigos.erase(enemigos.begin());
-        }
+      for (Personaje *p : enemigos) {
+        p->cargarExperiencia(expEnemigo / 2);
       }
     }
 
-    for (Personaje *e : enemigos) {
-      if (!equipo.empty()) {
-        e->atacar(*equipo[0]);
-        sleep(2);
-        if (!equipo[0]->estaVivo()) {
-          cout << equipo[0]->getNombre() << " ha sido derrotado!" << endl;
-          equipo.erase(equipo.begin());
+    while (!equipo.empty() && !enemigos.empty()) {
+      for (Personaje *p : equipo) {
+        if (!enemigos.empty()) {
+          p->atacar(*enemigos[0]);
+          sleep(2);
+          if (!enemigos[0]->estaVivo()) {
+            cout << enemigos[0]->getNombre() << " ha sido derrotado!" << endl;
+            enemigos.erase(enemigos.begin());
+          }
         }
+      }
+
+      for (Personaje *e : enemigos) {
+        if (!equipo.empty()) {
+          e->atacar(*equipo[0]);
+          sleep(2);
+          if (!equipo[0]->estaVivo()) {
+            cout << equipo[0]->getNombre() << " ha sido derrotado!" << endl;
+            equipo.erase(equipo.begin());
+          }
+        }
+      }
+
+      if (equipo.empty()) {
+        cout << "\n¡HAS PERDIDO!\n" << endl;
+        jugando = false;
+        expEnemigo += 50;
+        expEquipo += 20;
+      } else if (enemigos.empty()) {
+        cout << "\n¡HAS GANADO!\n" << endl;
+        expEquipo += 50;
+        expEnemigo += 20;
       }
     }
 
-    if (equipo.empty()) {
-      cout << "\n¡HAS PERDIDO!\n" << endl;
-      jugando = false;
-      expEnemigo += 50;
-      expEquipo += 20;
-    } else if (enemigos.empty()) {
-      cout << "\n¡HAS GANADO!\n" << endl;
-      expEquipo += 50;
-      expEnemigo += 20;
+    if (!jugando) {
+      delete jugador;
+      delete amigo;
+      delete enemigos1;
+      delete enemigos2;
     }
-
-  }
-
-  if (!jugando) {
-    delete jugador;
-    delete amigo;
-    delete enemigos1;
-    delete enemigos2;
-  }
 
   } while (jugando);
   // Implementar habilidad definitiva

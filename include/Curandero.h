@@ -7,6 +7,7 @@ class Curandero : public Personaje {
 private:
   int canCuracion;
   int rapidez;
+  HabilidadEspecial<int> bastonVeneno{4};
 
 public:
   Curandero(string);

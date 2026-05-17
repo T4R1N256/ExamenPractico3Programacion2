@@ -7,6 +7,7 @@ class Mago : public Personaje {
 private:
   int danVeneno;
   int campFuerza;
+  HabilidadEspecial<int> pocionDanio{2};
 
 public:
   Mago(string);

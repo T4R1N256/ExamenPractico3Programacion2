@@ -7,7 +7,7 @@ class Guerrero : public Personaje {
 private:
   int escudo;
   int fuerza;
-  HabilidadEspecial<int> estocada;
+  HabilidadEspecial<int> estocada{5};
 
 public:
   Guerrero(string);

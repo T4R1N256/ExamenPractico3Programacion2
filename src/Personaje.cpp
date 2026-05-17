@@ -1,7 +1,7 @@
 #include "Personaje.h"
 
-Personaje::Personaje(string nombre, string tipo, int danio, int poderTotal, int nivel,
-                     int exp, int salud, bool vivo) {
+Personaje::Personaje(string nombre, string tipo, int danio, int poderTotal,
+                     int nivel, int exp, int salud, bool vivo) {
 
   this->nombre = nombre;
   this->tipo = tipo;
@@ -12,11 +12,13 @@ Personaje::Personaje(string nombre, string tipo, int danio, int poderTotal, int 
   this->salud = (salud < 0) ? 0 : salud;
   this->saludMaxima = this->salud;
   this->vivo = vivo;
+  this->esCritico = false; // inicializar esCritico
   this->poderMaximo = 10;
 }
 
 Personaje::~Personaje() {}
 
+/* No necesario al ser virtual puro
 void Personaje::atacar(Personaje &otro) {
   otro.recibirDanio(danio);
   if (otro.salud <= 0) {
@@ -24,6 +26,7 @@ void Personaje::atacar(Personaje &otro) {
   }
   cout << nombre << " realiza un ataque generico!" << endl;
 }
+*/
 
 void Personaje::subirNivel() {
   nivel++;
@@ -31,7 +34,7 @@ void Personaje::subirNivel() {
     poderMaximo--;
   saludMaxima += 20;
   danio += 10;
-  cout << '\n' <<nombre << " ha subido al nivel " << nivel << "!\n" << endl;
+  cout << '\n' << nombre << " ha subido al nivel " << nivel << "!\n" << endl;
 }
 
 void Personaje::cargarExperiencia(int xp) {
@@ -60,19 +63,16 @@ void Personaje::recibirDanio(int danioRecibido) {
   if (salud <= 0) {
     salud = 0;
     vivo = false;
-  // } else if (salud <= (saludMaxima * 0.2)) {
-  //   menuAtaqueEspecial();
-  // }
+  } else if (salud <= (saludMaxima * 0.2)) {
+    // menuAtaqueEspecial();
   }
 }
 
-// void Personaje::menuAtaqueEspecial() {
+/*
+void Personaje::menuAtaqueEspecial() {}
 
-// }
-
-// void Personaje::ataqueEspecial(Personaje &otro) {
-
-// }
+void Personaje::ataqueEspecial(Personaje &otro) {}
+*/
 
 void Personaje::recibirCuracion(int vidaRecibida) {
   if (estaVivo()) {
@@ -96,7 +96,7 @@ string Personaje::getTipo() { return tipo; }
 int Personaje::operator()() { return nivel * danio + poderTotal; }
 
 ostream &operator<<(ostream &os, const Personaje &p) {
-      os << '"' << p.nombre << "\" Nivel: " << p.nivel << " | XP: " << p.experiencia
+  os << '"' << p.nombre << "\" Nivel: " << p.nivel << " | XP: " << p.experiencia
      << " | Salud: " << p.salud;
 
   return os;

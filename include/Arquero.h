@@ -7,6 +7,7 @@ class Arquero : public Personaje {
 private:
   int velocidad;
   int canFlechas;
+  HabilidadEspecial<int> flechaFuego{5};
 
 public:
   Arquero(string);
