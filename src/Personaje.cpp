@@ -9,8 +9,8 @@ Personaje::Personaje(string nombre, string tipo, int danio, int poderTotal,
   this->poderTotal = poderTotal;
   this->nivel = (nivel < 1) ? 1 : nivel;
   this->experiencia = (exp < 0) ? 0 : exp;
-  this->salud = (salud < 0) ? 0 : salud;
-  this->saludMaxima = this->salud;
+  this->salud = salud;
+  this->saludMaxima = (saludMaxima < 100) ? 100 : saludMaxima;
   this->vivo = vivo;
   this->esCritico = false; // inicializar esCritico
   this->poderMaximo = 10;
@@ -28,23 +28,30 @@ void Personaje::atacar(Personaje &otro) {
 }
 */
 
-void Personaje::subirNivel() {
-  nivel++;
+void Personaje::subirNivel(int n) {
+  nivel = n;
   if (poderMaximo > 0)
     poderMaximo--;
-  saludMaxima += 20;
-  danio += 10;
-  cout << '\n' << nombre << " ha subido al nivel " << nivel << "!\n" << endl;
+  salud = saludMaxima += (20 * nivel);
+  danio += (5 * nivel);
+  cout << '\n' << nombre << " ha subido al nivel " << nivel << "!" << endl;
 }
 
 void Personaje::cargarExperiencia(int xp) {
+  cout << '\n' << this->nombre << "(" << this->tipo << ") pasa a la siguiente ronda con " << xp << " XP" << endl;
   if (xp <= 0)
     return;
-  experiencia += xp;
-  while (experiencia >= 100) {
-    experiencia -= 100;
-    subirNivel();
-  }
+
+  experiencia = ((nivel - 1) * 100) + xp;
+
+  if (experiencia >= 100)
+   {
+    nivel = (experiencia / 100) + 1;
+    experiencia -= 100 * nivel;
+   }
+
+  if (nivel > 1)
+    subirNivel(nivel);
 }
 
 Personaje &Personaje::operator+(int xp) {
@@ -64,15 +71,9 @@ void Personaje::recibirDanio(int danioRecibido) {
     salud = 0;
     vivo = false;
   } else if (salud <= (saludMaxima * 0.2)) {
-    // menuAtaqueEspecial();
+    esCritico = true;
   }
 }
-
-/*
-void Personaje::menuAtaqueEspecial() {}
-
-void Personaje::ataqueEspecial(Personaje &otro) {}
-*/
 
 void Personaje::recibirCuracion(int vidaRecibida) {
   if (estaVivo()) {
@@ -93,11 +94,12 @@ string Personaje::getNombre() { return nombre; }
 
 string Personaje::getTipo() { return tipo; }
 
-int Personaje::operator()() { return nivel * danio + poderTotal; }
+// TODO quehaceeso
+void Personaje::operator()(int d) { cout << "-" << d << "!"; }
 
 ostream &operator<<(ostream &os, const Personaje &p) {
-  os << '"' << p.nombre << "\" Nivel: " << p.nivel << " | XP: " << p.experiencia
-     << " | Salud: " << p.salud;
+  os << '"' << p.nombre << "\"" << " | Tipo: " << p.tipo << " | Nivel: " << p.nivel << " | XP: " << p.experiencia
+     << " | Salud: " << p.salud << " | Daño base: " << p.danio;
 
   return os;
 }

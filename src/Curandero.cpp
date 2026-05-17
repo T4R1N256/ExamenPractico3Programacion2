@@ -7,12 +7,14 @@ Curandero::Curandero(string n)
 void Curandero::atacar(Personaje &otro) {
   bastonVeneno.cargar();
 
-  if (bastonVeneno.lanzar()) {
+  if (bastonVeneno.lanzar() || estaCritico()) {
     int danioCritico = (danio + 10 + rapidez);
     otro.recibirDanio(danioCritico);
     cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
-         << " (" << otro.getTipo() << ") con su ATAQUE CRITICO!" << endl;
+         << " (" << otro.getTipo() << ") con su ATAQUE CRITICO!";
+         otro(danioCritico); cout << endl;
     bastonVeneno.resetPoder();
+    esCritico = false;
   } else {
     otro.recibirDanio(danio);
     cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
@@ -26,6 +28,4 @@ void Curandero::curar(Personaje &otro) {
        << canCuracion << endl;
 }
 
-Curandero::~Curandero() {
-  cout << "Curandero " << nombre << " destruido correctamente" << endl;
-}
+Curandero::~Curandero() {}

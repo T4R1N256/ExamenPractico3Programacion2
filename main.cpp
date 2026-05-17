@@ -149,7 +149,7 @@ Personaje *crearPersonaje(int tipo) {
   }
 }
 
-int generarIdAleatorio(int max) { return rand() % max + 1; }
+int generarIdAleatorio(int max) { return rand() % (max + 1); }
 
 int main() {
   srand(time(NULL));
@@ -162,9 +162,9 @@ int main() {
 
   do {
     if (!rondas)
-      cout << "¿Quieres empezar a jugar?: ";
+      cout << "¿Quieres empezar a jugar? [s/n]: ";
     else
-      cout << "¿Quieres jugar otra ronda?: ";
+      cout << "\n¿Quieres jugar otra ronda? [s/n]: ";
 
     cin >> res;
 
@@ -180,7 +180,7 @@ int main() {
       cout << "¡Gracias por jugar! Hasta la próxima." << endl;
     }
 
-    cout << "========== RONDA " << rondas << " ==========" << endl;
+    cout << "\n========== RONDA " << rondas << " ==========" << endl;
     int id_jugador = EscogerPersonaje();
 
     // No necesario porque nunca llega al error
@@ -216,21 +216,15 @@ int main() {
     Personaje *enemigos1 = nullptr;
     Personaje *enemigos2 = nullptr;
 
-    vector<Personaje *> enemigos = {};
+    vector<Personaje *> enemigos;
 
-    for (int i = 1; i <= 4; i++) {
-      if (i != id_jugador && i != id_amigo) {
-        if (enemigos1 == nullptr) {
           cout << "\nEnemigo 1: " << endl;
-          enemigos1 = crearPersonaje(generarIdAleatorio(4));
+    enemigos1 = crearPersonaje(generarIdAleatorio(3) + 1);
           enemigos.push_back(enemigos1);
-        } else if (enemigos2 == nullptr) {
+
           cout << "\nEnemigo 2: " << endl;
-          enemigos2 = crearPersonaje(generarIdAleatorio(4));
+    enemigos2 = crearPersonaje(generarIdAleatorio(3) + 1);
           enemigos.push_back(enemigos2);
-        }
-      }
-    }
 
     if (expEnemigo) {
       for (Personaje *p : enemigos) {
@@ -238,51 +232,64 @@ int main() {
       }
     }
 
+    cout << "\n=========== EQUIPO ==============" << endl;
+    for (size_t i = 0; i < equipo.size(); i++) {
+      cout << *equipo[i] << endl;
+    }
+
+    cout << "\n=========== ENEMIGOS ============" << endl;
+    for (size_t i = 0; i < enemigos.size(); i++) {
+      cout << *enemigos[i] << endl;
+    }
+
+    cout << endl;
+
     while (!equipo.empty() && !enemigos.empty()) {
       for (Personaje *p : equipo) {
         if (!enemigos.empty()) {
-          p->atacar(*enemigos[0]);
-          sleep(2);
+          p->atacar(*enemigos[generarIdAleatorio(1)]);
+          // sleep(2);
           if (!enemigos[0]->estaVivo()) {
-            cout << enemigos[0]->getNombre() << " ha sido derrotado!" << endl;
+            cout << '\n' << enemigos[0]->getNombre() << " HA SIDO DERROTADO!\n" << endl;
             enemigos.erase(enemigos.begin());
+          } else if (!enemigos[1]->estaVivo()) {
+            cout <<'\n' << enemigos[1]->getNombre() << " HA SIDO DERROTADO!\n" << endl;
+            enemigos.erase(enemigos.begin() + 1);
           }
         }
       }
 
       for (Personaje *e : enemigos) {
         if (!equipo.empty()) {
-          e->atacar(*equipo[0]);
-          sleep(2);
+          e->atacar(*equipo[generarIdAleatorio(1)]);
+          // sleep(2);
           if (!equipo[0]->estaVivo()) {
-            cout << equipo[0]->getNombre() << " ha sido derrotado!" << endl;
+            cout << '\n' << equipo[0]->getNombre() << " HA SIDO DERROTADO!\n" << endl;
             equipo.erase(equipo.begin());
+          } else if (!equipo[1]->estaVivo()) {
+            cout << '\n' << equipo[1]->getNombre() << " HA SIDO DERROTADO!\n" << endl;
+            equipo.erase(equipo.begin() + 1);
           }
         }
       }
 
       if (equipo.empty()) {
         cout << "\n¡HAS PERDIDO!\n" << endl;
-        jugando = false;
-        expEnemigo += 50;
-        expEquipo += 20;
+        expEnemigo += generarIdAleatorio(100) + 100;
+        expEquipo += generarIdAleatorio(50) + 50;
       } else if (enemigos.empty()) {
         cout << "\n¡HAS GANADO!\n" << endl;
-        expEquipo += 50;
-        expEnemigo += 20;
+        expEquipo += generarIdAleatorio(100) + 100;
+        expEnemigo += generarIdAleatorio(50) + 50;
       }
     }
 
-    if (!jugando) {
       delete jugador;
       delete amigo;
       delete enemigos1;
       delete enemigos2;
-    }
 
   } while (jugando);
-  // Implementar habilidad definitiva
-  // Bajar salud? ataque
 
   return 0;
 }

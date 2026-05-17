@@ -28,7 +28,7 @@ public:
 
   virtual void atacar(Personaje &) = 0;
 
-  void subirNivel();
+  void subirNivel(int);
   string getNombre();
   string getTipo();
 
@@ -39,10 +39,10 @@ public:
   void cargarExperiencia(int);
   Personaje &operator+(int); // añade experiencia
   bool operator>(const Personaje &); // compara el nivel o experiencia de 2 personajes
-  int operator()(); // TODO
+  void operator()(int); // TODO
 
   friend ostream &operator<<(ostream &, const Personaje &);
-  friend istream &operator>>(istream &, Personaje &);
+  friend istream &operator>>(istream &, Personaje &); // TODO
 };
 
 #endif
