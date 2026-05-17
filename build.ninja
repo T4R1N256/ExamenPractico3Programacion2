@@ -1,0 +1,26 @@
+ninja_required_version = 1.10
+
+cxx = g++
+cxxflags = -std=c++20 -Wall -Wextra -Iinclude -g
+
+rule cxx
+  command = $cxx $cxxflags -MMD -MT $out -MF $out.d -c $in -o $out
+  description = Compiling $out
+  depfile = $out.d
+  deps = gcc
+
+rule link
+  command = $cxx $in -o $out
+  description = LINK $out
+
+build build/Personaje.o: cxx src/Personaje.cpp
+build build/Guerrero.o:  cxx src/Guerrero.cpp
+build build/Mago.o:      cxx src/Mago.cpp
+build build/Curandero.o: cxx src/Curandero.cpp
+build build/Arquero.o:   cxx src/Arquero.cpp
+
+build build/main.o: cxx main.cpp
+
+build build/examen: link build/main.o build/Personaje.o build/Guerrero.o build/Mago.o build/Curandero.o build/Arquero.o
+
+default build/examen
