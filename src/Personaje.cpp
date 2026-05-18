@@ -1,5 +1,19 @@
 #include "Personaje.h"
 
+Personaje::Personaje() {
+  this->nombre = "DEFAULT";
+  this->tipo = "DEFAULT";
+  this->danio = 1;
+  this->poderTotal = 1;
+  this->nivel = 1;
+  this->experiencia = 0;
+  this->salud = 1;
+  this->saludMaxima = 1;
+  this->vivo = true;
+  this->esCritico = false;
+  this->poderMaximo = 10;
+}
+
 Personaje::Personaje(string nombre, string tipo, int danio, int poderTotal,
                      int nivel, int exp, int salud, bool vivo) {
 
@@ -32,8 +46,10 @@ void Personaje::subirNivel(int n) {
   nivel = n;
   if (poderMaximo > 0)
     poderMaximo--;
-  salud = saludMaxima += (20 * nivel);
-  danio += (5 * nivel);
+  //salud = saludMaxima += 20 * (nivel - 1);
+  salud = saludMaxima += 20;
+  cout << salud << " " << saludMaxima << " " << nivel << endl;
+  danio += (5 * (nivel - 1));
   cout << '\n' << nombre << " ha subido al nivel " << nivel << "!" << endl;
 }
 
@@ -47,7 +63,7 @@ void Personaje::cargarExperiencia(int xp) {
   if (experiencia >= 100)
    {
     nivel = (experiencia / 100) + 1;
-    experiencia -= 100 * nivel;
+    experiencia -= 100 * (nivel - 1);
    }
 
   if (nivel > 1)
@@ -80,7 +96,8 @@ void Personaje::recibirCuracion(int vidaRecibida) {
     salud += vidaRecibida;
     if (salud > saludMaxima) {
       salud = saludMaxima;
-    } else if (salud > (saludMaxima * 0.2)) {
+    }
+    if (salud > (saludMaxima * 0.2)) {
       esCritico = false;
     }
   }
@@ -93,6 +110,8 @@ bool Personaje::estaCritico() { return esCritico; }
 string Personaje::getNombre() { return nombre; }
 
 string Personaje::getTipo() { return tipo; }
+
+int Personaje::getSalud() { return salud; }
 
 // TODO quehaceeso
 void Personaje::operator()(int d) { cout << "-" << d << "!"; }

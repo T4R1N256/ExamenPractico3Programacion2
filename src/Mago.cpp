@@ -16,6 +16,7 @@ void Mago::atacar(Personaje &otro) {
          << " (" << otro.getTipo() << ") con su ATAQUE CRITICO!";
          otro(danioCritico); cout << endl;
     pocionDanio.resetPoder();
+    esCritico = false;
   } else {
     otro.recibirDanio(danio);
     cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()

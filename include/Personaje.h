@@ -21,6 +21,7 @@ protected:
   int poderMaximo;
 
 public:
+  Personaje(); // sandbox?
   Personaje(string nombre, string tipo, int danio, int poderTotal, int nivel = 1,
             int exp = 0, int salud = 100, bool vivo = true);
 
@@ -31,11 +32,12 @@ public:
   void subirNivel(int);
   string getNombre();
   string getTipo();
+  int getSalud();
+  bool estaVivo();
+  bool estaCritico();
 
   void recibirDanio(int);
   void recibirCuracion(int);
-  bool estaVivo();
-  bool estaCritico();
   void cargarExperiencia(int);
   Personaje &operator+(int); // añade experiencia
   bool operator>(const Personaje &); // compara el nivel o experiencia de 2 personajes
