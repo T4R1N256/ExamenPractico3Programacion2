@@ -10,10 +10,11 @@ private:
   HabilidadEspecial<int> estocada{5};
 
 public:
-  Guerrero(string);
+  Guerrero();
 
   ~Guerrero();
 
+  void subirNivel(int n) override;
   void atacar(Personaje &) override;
 };
 

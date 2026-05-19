@@ -10,9 +10,11 @@ private:
   HabilidadEspecial<int> flechaFuego{5};
 
 public:
-  Arquero(string);
+  Arquero();
 
   ~Arquero();
+
+  void subirNivel(int n) override;
 
   void atacar(Personaje &) override;
 };

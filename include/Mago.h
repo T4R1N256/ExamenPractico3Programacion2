@@ -7,13 +7,15 @@ class Mago : public Personaje {
 private:
   int danVeneno;
   int campFuerza;
+  int canPociones;
   HabilidadEspecial<int> pocionDanio{2};
 
 public:
-  Mago(string);
+  Mago();
 
   ~Mago();
 
+  void subirNivel(int n) override;
   void atacar(Personaje &) override;
 };
 

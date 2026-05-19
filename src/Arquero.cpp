@@ -1,8 +1,8 @@
 #include "Arquero.h"
 
-Arquero::Arquero(string n)
-    : Personaje(n, "Arquero", 15, 70, 1, 0, 100, true), velocidad(10),
-      canFlechas(10) {};
+Arquero::Arquero()
+    : Personaje("DEFAULT", "Arquero", 20, 1, 0, 100, true), velocidad(15),
+      canFlechas(5) {};
 
 Arquero::~Arquero() {}
 
@@ -12,22 +12,29 @@ void Arquero::atacar(Personaje &otro) {
     flechaFuego.cargar();
 
     if (flechaFuego.lanzar() || estaCritico()) {
-      int danioCritico = (danio + velocidad + 20);
+      int danioCritico = (danio + velocidad);
       otro.recibirDanio(danioCritico);
-      cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
-           << " (" << otro.getTipo() << ") con su ATAQUE CRITICO!"; 
-           otro(danioCritico); cout << endl;
+      cout << this->nombre << " (" << (*this)() << ") ataca a " << otro.getNombre()
+           << " (" << otro() << ") con su ATAQUE CRITICO!" << endl; 
       flechaFuego.resetPoder();
       esCritico = false;
     } else {
       otro.recibirDanio(danio);
-      cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
-           << " (" << otro.getTipo() << ") con su arco!" << endl;
+      cout << this->nombre << " (" << (*this)() << ") ataca a " << otro.getNombre()
+           << " (" << otro() << ") con su arco!" << endl;
     }
     canFlechas--;
   } else {
     cout << this->nombre << " (" << tipo << ") tuvo que recargar flechas"
          << endl;
-    canFlechas = 10;
+    canFlechas = 5;
   }
-};
+}
+
+void Arquero::subirNivel(int n) { 
+  int correct_n = n - 1;
+
+  Personaje::subirNivel(n);
+
+  velocidad += 20 * correct_n; 
+}

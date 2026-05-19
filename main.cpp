@@ -124,29 +124,20 @@ int EscogerCompanero(int p) {
   return opc;
 }
 
-Personaje *crearPersonaje(int tipo) {
-  string nombre;
+Personaje* crearPersonaje(int tipo) {
+    Personaje *p = nullptr;
 
-  cout << "Nombre del personaje: ";
+    switch (tipo) {
+        case GUERRERO:  p = new Guerrero(); break;
+        case CURANDERO: p = new Curandero(); break;
+        case ARQUERO:   p = new Arquero(); break;
+        case MAGO:      p = new Mago(); break;
+        default: return nullptr;
+    }
 
-  getline(cin, nombre);
-
-  switch (tipo) {
-  case GUERRERO:
-    return new Guerrero(nombre);
-
-  case CURANDERO:
-    return new Curandero(nombre);
-
-  case ARQUERO:
-    return new Arquero(nombre);
-
-  case MAGO:
-    return new Mago(nombre);
-
-  default:
-    return nullptr;
-  }
+    // input stream >> sobrecargado
+    cin >> *p;
+    return p;
 }
 
 int generarIdAleatorio(int max) { return rand() % (max + 1); }
@@ -159,11 +150,12 @@ int main() {
   string res = "n";
 
 
-  Personaje *jugador = nullptr, *amigo = nullptr, *enemigos1 = nullptr, *enemigos2 = nullptr;
+
 
   cout << "¡Bienvenido al juego de batalla de personajes!" << endl;
 
   do {
+    Personaje *jugador, *amigo, *enemigos1, *enemigos2;
     if (!rondas)
       cout << "¿Quieres empezar a jugar? [s/n]: ";
     else
@@ -183,16 +175,6 @@ int main() {
       cout << "\n¡Gracias por jugar! Hasta la próxima." << endl;
       break;
     }
-
-    // string sand;
-
-    // cout << "Deseas activar el modo sandbox? [sand/n] (deberas ingresar manualmente TODA la informacion de tu personaje): ";
-
-    // cin >> sand;
-
-    // if (sand == "sand") {
-        
-    // }
 
     cout << "\n========== RONDA " << rondas << " ==========" << endl;
     int id_jugador = EscogerPersonaje();
@@ -223,7 +205,7 @@ int main() {
 
     if (expEquipo) {
       for (Personaje *p : equipo) {
-        p->cargarExperiencia(expEquipo / 2);
+        *p + (expEquipo / 2);
       }
     }
 
@@ -239,7 +221,7 @@ int main() {
 
     if (expEnemigo) {
       for (Personaje *p : enemigos) {
-        p->cargarExperiencia(expEnemigo / 2);
+        *p + (expEnemigo / 2);
       }
     }
 
@@ -267,79 +249,84 @@ int main() {
         if (!enemigos.empty()) {
           int idx = enemigos.size() > 1 ? generarIdAleatorio(1) : 0;
           Personaje *currAtacar = enemigos[idx];
+          cout << "[EQUIPO] ";
           p->atacar(*currAtacar);
-          // sleep(2);
+          sleep(3);
 
           if (!currAtacar->estaVivo()) {
-            cout << '\n' << currAtacar->getNombre() << " HA SIDO DERROTADO!\n" << endl;
+            cout << '\n' << currAtacar->getNombre() << " HA SIDO DERROTADO(A)!\n" << endl;
             enemigos.erase(enemigos.begin() + idx); // arr[0 + idx]
-                        delete currAtacar;
+            delete currAtacar;
           }
 
-          if (enemigos[0]->estaCritico() && enemigos[1]->getTipo() == "Curandero" && enemigos[1]->estaVivo() && enemigos[0]->estaVivo())
-          {
-              dynamic_cast<Curandero *>(enemigos[1])->curar(*enemigos[0]);
-          } else if (enemigos[1]->estaCritico() && 
-          enemigos[0]->getTipo() == "Curandero" &&
-          enemigos[1]->estaVivo() && 
-          enemigos[0]->estaVivo())
-          {
-              dynamic_cast<Curandero *>(enemigos[0])->curar(*enemigos[1]);
+          if (enemigos.size() >= 2) {
+            if (enemigos[0]->estaCritico() && enemigos[1]->getTipo() == "Curandero" && enemigos[1]->estaVivo() && enemigos[0]->estaVivo())
+            {
+                dynamic_cast<Curandero *>(enemigos[1])->curar(*enemigos[0]);
+            } else if (enemigos[1]->estaCritico() &&
+            enemigos[0]->getTipo() == "Curandero" &&
+            enemigos[1]->estaVivo() &&
+            enemigos[0]->estaVivo())
+            {
+                dynamic_cast<Curandero *>(enemigos[0])->curar(*enemigos[1]);
+            }
           }
         }
       }
+
+      cout << endl;
 
       for (auto *e : enemigos) {
         if (!equipo.empty()) {
           int idx = equipo.size() > 1 ? generarIdAleatorio(1) : 0;
           Personaje *currAtacar = equipo[idx];
+          cout << "[ENEMIGO] ";
           e->atacar(*currAtacar);
-          // sleep(2);
+          sleep(3);
 
           if (!currAtacar->estaVivo()) {
-            cout << '\n' << currAtacar->getNombre() << " HA SIDO DERROTADO!\n" << endl;
+            cout << '\n' << currAtacar->getNombre() << " HA SIDO DERROTADO(A)!\n" << endl;
             equipo.erase(equipo.begin() + idx); // arr[0 + idx]
-                        delete currAtacar;
+            delete currAtacar;
           }
 
-          if (equipo[0]->estaCritico() && equipo[1]->getTipo() == "Curandero" && equipo[1]->estaVivo() && equipo[0]->estaVivo())
-          {
-              dynamic_cast<Curandero *>(equipo[1])->curar(*equipo[0]);
-          } else if (equipo[1]->estaCritico() && 
-          equipo[0]->getTipo() == "Curandero" &&
-          equipo[1]->estaVivo() && 
-          equipo[0]->estaVivo())
-          {
-              dynamic_cast<Curandero *>(equipo[0])->curar(*equipo[1]);
+          if (equipo.size() >= 2) {
+            if (equipo[0]->estaCritico() && equipo[1]->getTipo() == "Curandero" && equipo[1]->estaVivo() && equipo[0]->estaVivo())
+            {
+                dynamic_cast<Curandero *>(equipo[1])->curar(*equipo[0]);
+            } else if (equipo[1]->estaCritico() &&
+            equipo[0]->getTipo() == "Curandero" &&
+            equipo[1]->estaVivo() &&
+            equipo[0]->estaVivo())
+            {
+                dynamic_cast<Curandero *>(equipo[0])->curar(*equipo[1]);
+            }
           }
         }
       }
+
+      cout << endl;
 
       if (equipo.empty()) {
         cout << "\n¡HAS PERDIDO!\n" << endl;
         expEnemigo += generarIdAleatorio(100) + 100;
         expEquipo += generarIdAleatorio(50) + 50;
-        for (auto *e: enemigos) {
-          delete e;
-        }
+
       } else if (enemigos.empty()) {
         cout << "\n¡HAS GANADO!\n" << endl;
         expEquipo += generarIdAleatorio(100) + 100;
         expEnemigo += generarIdAleatorio(50) + 50;
-        for (auto *a: equipo) {
-          delete a;
-        }
+
       }
     }
 
+    for (auto *e : enemigos) delete e;
+    for (auto *a : equipo) delete a;
 
-    
+    enemigos.clear();
+    equipo.clear();
+
   } while (jugando);
-
-      delete jugador;
-      delete amigo;
-      delete enemigos1;
-      delete enemigos2;
 
   return 0;
 }

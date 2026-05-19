@@ -10,10 +10,11 @@ private:
   HabilidadEspecial<int> bastonVeneno{4};
 
 public:
-  Curandero(string);
+  Curandero();
 
   ~Curandero();
 
+  void subirNivel(int n) override;
   void atacar(Personaje &) override;
   void curar(Personaje &);
 };

@@ -1,31 +1,39 @@
 #include "Curandero.h"
 
-Curandero::Curandero(string n)
-    : Personaje(n, "Curandero", 15, 70, 1, 0, 100, true), canCuracion(10),
-      rapidez(5) {};
+Curandero::Curandero()
+    : Personaje("DEFAULT", "Curandero", 10, 1, 0, 100, true), canCuracion(20),
+      rapidez(15) {};
 
 void Curandero::atacar(Personaje &otro) {
     bastonVeneno.cargar();
 
   if (bastonVeneno.lanzar() || estaCritico()) {
-      int danioCritico = (danio + 10 + rapidez);
+      int danioCritico = (danio + rapidez);
       otro.recibirDanio(danioCritico);
-      cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
-           << " (" << otro.getTipo() << ") con su ATAQUE CRITICO!";
-            otro(danioCritico); cout << endl;
+      cout << this->nombre << " (" << (*this)() << ") ataca a " << otro.getNombre()
+           << " (" << otro() << ") con su ATAQUE CRITICO!" << endl;
       bastonVeneno.resetPoder();
       esCritico = false;
     } else {
       otro.recibirDanio(danio);
-      cout << this->nombre << " (" << tipo << ") ataca a " << otro.getNombre()
-           << " (" << otro.getTipo() << ") con su baston!" << endl;
+      cout << this->nombre << " (" << (*this)() << ") ataca a " << otro.getNombre()
+           << " (" << otro() << ") con su baston!" << endl;
     }
 }
 
 void Curandero::curar(Personaje &otro) {
   otro.recibirCuracion(canCuracion);
-  cout << this->nombre << " ha curado a " << otro.getNombre() << "! +"
+  cout << endl << this->nombre << " ha curado a " << otro.getNombre() << "! +"
        << canCuracion << endl;
+}
+
+void Curandero::subirNivel(int n) {
+  int correct_n = n - 1;
+
+  Personaje::subirNivel(n);
+  
+  canCuracion += 50 * correct_n;
+  rapidez += 15 * correct_n;
 }
 
 Curandero::~Curandero() {}
